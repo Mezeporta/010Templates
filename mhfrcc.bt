@@ -1,0 +1,37 @@
+struct RSTRING {
+    uint32 pStr;
+    local int i = FTell();
+    FSeek(pStr);
+    string str;
+    FSeek(i);
+};
+
+struct ENTRY {
+    int32 unk;
+    int32 unk; // only used by
+    int32 unk; // diva defence
+    int32 unk;
+    int32 unk;
+    RSTRING title;
+    RSTRING description;
+    // only used by conquest battle
+    RSTRING extend1;
+    RSTRING extend2;
+};
+
+struct FILE {
+    LittleEndian();
+    
+    uint32 pData;
+    uint32 lenData;
+    uint32 pStrings;
+    uint32 lenStrings;
+    uint32 pOrder;
+    
+    FSeek(pData);
+    ENTRY entries[lenData] <optimize=false>;
+    FSeek(pStrings);
+    RSTRING strings[lenStrings] <optimize=false>;
+    FSeek(pOrder);
+    ubyte order[lenData];
+} file;

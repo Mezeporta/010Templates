@@ -1,0 +1,66 @@
+struct ENTRYDEST {
+    float coordinates[3];
+    uint32 rotation;
+};
+
+struct ENTRY {
+    uint32 index;
+    int32 unk; // icon or color, idk
+    uint16 stageIds[4];
+    ENTRYDEST destinations[2];
+    uint32 pTitle;
+    uint32 pDesc;
+    local int i = FTell();
+    FSeek(pTitle);
+    string title;
+    FSeek(pDesc);
+    string desc;
+    FSeek(i);
+};
+
+struct AREAENTRY {
+    uint16 index;
+    uint16 flags;
+};
+
+struct AREA {
+    uint32 pEntryData;
+    uint32 lenEntryData;
+    uint32 pStageIds;
+    local int i = FTell();
+    FSeek(pEntryData);
+    AREAENTRY entry[lenEntryData];
+    FSeek(pStageIds);
+    while (1) {
+        uint16 stageId;
+        if (stageId == 0) {
+            break;
+        }
+    }
+    FSeek(i);
+};
+
+struct JSTRING {
+    uint32 pStr;
+    local int i = FTell();
+    FSeek(pStr);
+    string str;
+    FSeek(i);
+};
+
+struct FILE {
+    LittleEndian();
+    local int i, j;
+    
+    uint32 pEntries;
+    uint32 pAreas;
+    uint32 lenAreas;
+    uint32 pStrings;
+    uint32 lenStrings;
+    FSeek(pAreas);
+    AREA areas[lenAreas] <optimize=false>;
+    FSeek(pStrings);
+    JSTRING strings[lenStrings] <optimize=false>;
+    FSeek(pEntries);
+    ENTRY entries[24] <optimize=false>;
+} file;

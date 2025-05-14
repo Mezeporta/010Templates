@@ -1,0 +1,94 @@
+struct TASKDAT {
+    // no idea
+    ubyte unk[40];
+};
+
+struct TASKRWD {
+    FSkip(4);
+    uint16 itemId;
+    uint16 quantity;
+};
+
+struct TASKUNK {
+    ubyte unk;
+};
+
+struct TAB {
+    uint32 group;
+    uint32 index;
+    uint32 pData;
+    uint32 lenTasks1; // x40
+    uint32 pTasks;
+    uint32 lenTasks2;
+    uint32 pUnk3; // probably maps rewards
+    uint32 pUnk4;
+    uint32 unk;
+    
+    local int i = FTell();
+    
+    FSeek(pData);
+    TASKDAT data[lenTasks1];
+    
+    FSeek(pTasks);
+    uint32 pRewards[lenTasks2];
+    local int j;
+    for (j=0;j<lenTasks2;j++) {
+        FSeek(pRewards[j]);
+        while (1) {
+            TASKRWD reward;
+            if (reward.quantity == 0) {
+                break;
+            }
+        }
+    }
+    
+    FSeek(pUnk3);
+    while (1) {
+        TASKUNK unk;
+        if (unk.unk == 255) {
+            break;
+        }
+    }
+    
+    // no idea
+    FSeek(pUnk4);
+    uint32 unk;
+    
+    FSeek(i);
+};
+
+struct UNK {
+    uint32 unk;
+    uint32 unk;
+    uint32 unk;
+    uint32 unk;
+    uint32 unk;
+    uint32 unk;
+    uint32 unk;
+    uint32 unk;
+};
+
+struct FILE {
+    LittleEndian();
+    
+    uint32 pTabs;
+    uint32 pUnk;
+    uint32 lenUnk;
+    uint32 pUnk1;
+    uint32 pUnk2;
+    uint32 lenUnk2;
+    
+    FSeek(pTabs);
+    TAB tabs[14] <optimize=false>;
+    
+    FSeek(pUnk);
+    UNK unk[lenUnk] <optimize=false>;
+    
+    // this is probably wrong
+    // tab order?
+    FSeek(pUnk1+1);
+    ubyte unk1[lenUnk2] <optimize=false>;
+    
+    FSeek(pUnk2);
+    uint16 unk2[lenUnk2] <optimize=false>;
+} file;

@@ -1,0 +1,62 @@
+struct RSTRING {
+    string str;
+};
+
+struct RBYTES (int x) {
+    uint32 pBytes;
+    local int i = FTell();
+    FSeek(pBytes);
+    ubyte unk[x];
+    FSeek(i);
+};
+
+struct RPTRS {
+    uint32 pStr;
+    local int i = FTell();
+    FSeek(pStr);
+    
+    local int j;
+    while (1) {
+        uint32 sStr <hidden=true>;
+        if (sStr == 0) {
+            FSeek(i);
+            return;
+        }
+        j = FTell();
+        FSeek(sStr);
+        RSTRING str;
+        FSeek(j);
+    }
+};
+
+struct FILE {
+    LittleEndian();
+    uint32 header1;
+    uint32 header2;
+    uint32 null;
+    uint32 lenHeader;
+    uint32 pLenStructs;
+    local int i = FTell();
+    FSeek(pLenStructs);
+    uint16 lenStructs[56];
+    FSeek(i);
+    RPTRS b20;
+    RPTRS b24;
+    RPTRS b28;
+    RPTRS b32;
+    RPTRS b36;
+    RPTRS b40;
+    RPTRS b44;
+    RPTRS b48;
+    RPTRS b52;
+    RBYTES b56(36*lenStructs[0]);
+    RBYTES b60(116*lenStructs[1]);
+    RBYTES b64(8*lenStructs[2]);
+    RBYTES b68(8*lenStructs[3]);
+    RBYTES b72(3240);
+    FSkip(4);
+    RPTRS b80;
+    RPTRS b84;
+    FSkip(64);
+    RBYTES b148(16*lenStructs[13]);
+} file;

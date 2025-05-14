@@ -1,0 +1,12 @@
+struct SCH {
+    uint32 year;
+    uint32 month;
+    uint32 day;
+    uint32 hour;
+    FSkip(16);
+};
+
+struct FILE {
+    LittleEndian();
+    SCH sch[37] <optimize=false>;
+} file;

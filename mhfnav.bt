@@ -9,10 +9,6 @@ struct TASKRWD {
     uint16 quantity;
 };
 
-struct TASKUNK {
-    ubyte unk;
-};
-
 struct TAB {
     uint32 group;
     uint32 index;
@@ -44,8 +40,8 @@ struct TAB {
     
     FSeek(pUnk3);
     while (1) {
-        TASKUNK unk;
-        if (unk.unk == 255) {
+        ubyte unk;
+        if (unk == 255) {
             break;
         }
     }
